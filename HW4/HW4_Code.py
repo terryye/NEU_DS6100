@@ -99,7 +99,7 @@ feat_df =  impute_df.loc[:,impute_df.columns != 'BloodPressure']
 #feat_df['Glucose'] = np.log(feat_df['Glucose'])
 
 #Seperate test and train data
-train_x,test_x,train_y,test_y = train_test_split(feat_df,outcome_df,test_size=0.25, random_state=42)
+train_x,test_x,train_y,test_y = train_test_split(feat_df,outcome_df,test_size=0.25, random_state=0)
 
 #Create a multiple Reg model
 model = LinearRegression()
@@ -161,11 +161,11 @@ for k in range(1,19):
 # accuracy
 print( "Accuracy=", accuracy)
 
-plt.figure(figsize=(19, 5))
 plt.plot(range(1,19), accuracy, marker='o')
+
 plt.title('Elbow method')
 plt.xlabel('Number of clusters')
 plt.ylabel('Accuracy')
 plt.show()
 
-print("8 is the optimal number")
+print("K=8")
