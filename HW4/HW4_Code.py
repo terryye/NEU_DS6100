@@ -107,7 +107,7 @@ model.fit(train_x,  train_y)
 
 #get the r_sq value
 r_sq = model.score(test_x, test_y)
-test_pred_y = model.predict(test_x)
+#test_pred_y = model.predict(test_x)
 
 print ('R2 =',r_sq )
 
