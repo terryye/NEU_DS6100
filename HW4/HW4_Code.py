@@ -51,49 +51,11 @@ def impute(dataframe):
     return im_df
 
 ##############################################Multiple Reg
-
-#Input Dateset
-'''
-Pregnancies: To express the Number of pregnancies
-    range from 0-15, seem ok
-Glucose: To express the Glucose level in blood
-    range from 44-199, seem ok. 
-BloodPressure: To express the Blood pressure measurement(seems diastolic -- lower)
-    range from 24-122. low than 40 or higher than 120 seems impossible https://www.eatingwell.com/thmb/wsN5OoERqEqOpCCcKstTBapVV7s=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/blood-pressure-chart-final-6c215c755f9a40f5ad7d7bb4c42b0f89.jpg
-SkinThickness: To express the thickness of the skin (1/10 mm) should be [0.5,4]mm. 
-    a lot of 0. which is invalid data.
-Insulin: To express the Insulin level in blood (0~280)
-    a lot of 0. which is invalid data.
-BMI: To express the Body mass index. 18.5-40
-    seems reasonable. although one or two over 50. but it could be.
-DiabetesPedigreeFunction: Diabetes pedigree function. Indicates the function which scores likelihood of diabetes based on family history
-Age: To express the age
-    no problem
-Outcome: To express the final result 1 is Yes and 0 is No
-'''
-
-## preprocessing the data
 org_df = pd.read_csv("hw4_train.csv")
-df = org_df.loc[:]
-
-#remove invalid 0
-df['SkinThickness'] = df['SkinThickness'].replace(0, np.nan)
-df['Insulin'] = df['Insulin'].replace(0, np.nan)
-
-# remove outlier
-# all data seem good,not necessary.
-
-#impute missing data (MICE)
-impute_df = impute(df)
-
-#print(impute_df.describe())
-#print(impute_df['BloodPressure'].describe())
-
-#showCorrelation(impute_df,'Insulin', 'BloodPressure')
 
 #Define features and outcome for Regression
-outcome_df =  impute_df.loc[:,impute_df.columns == 'BloodPressure']
-feat_df =  impute_df.loc[:,impute_df.columns != 'BloodPressure']
+outcome_df =  org_df.loc[:,org_df.columns == 'BloodPressure']
+feat_df =  org_df.loc[:,org_df.columns != 'BloodPressure']
 
 #transform seems not necessary
 #feat_df['Glucose'] = np.log(feat_df['Glucose'])
@@ -117,21 +79,14 @@ print ('R2 =',r_sq )
 #Input Dateset
 orig_df_2 = pd.read_csv("hw4_test.csv")
 
-#deal with error data
-df_2 = orig_df_2.loc[:]
-df_2['SkinThickness'] = df_2['SkinThickness'].replace(0, np.nan)
-df_2['Insulin'] = df_2['Insulin'].replace(0, np.nan)
-
 #get feature data frame
-feat_df_2 =  df_2.loc[:, df_2.columns != 'BloodPressure']
-
-#impute miss values
-imputed_feat_df_2 = impute(feat_df_2)
+feat_df_2 =  orig_df_2.loc[:, orig_df_2.columns != 'BloodPressure']
 
 #predict values
-test_pred_y_2 = model.predict(imputed_feat_df_2)
+test_pred_y_2 = model.predict(feat_df_2)
 
 #save to dataframe,and csv_file
+df_2 = orig_df_2.loc[:]
 df_2["BloodPressure"] = test_pred_y_2.astype(int)
 df_2.to_csv("hw4_linear_predicted.csv",index=False)
 
@@ -143,12 +98,8 @@ train_y =  org_df.loc[:,org_df.columns == 'Outcome']
 train_x =  org_df.loc[:,org_df.columns != 'Outcome']
 
 #Define features and label for KNN of test data
-df_2_select = orig_df_2.loc[:]  # use the original data
-df_2_select["BloodPressure"] = test_pred_y_2.astype(int)
-#df_2_select = impute(df_2) # use the imputed data
-
-test_x = df_2_select.loc[:,df_2_select.columns != 'Outcome']
-test_y = df_2_select.loc[:,df_2_select.columns == 'Outcome']
+test_x = df_2.loc[:,df_2.columns != 'Outcome']
+test_y = df_2.loc[:,df_2.columns == 'Outcome']
 
 #KNN Model
 accuracy = []
@@ -168,4 +119,4 @@ plt.xlabel('Number of clusters')
 plt.ylabel('Accuracy')
 plt.show()
 
-print("K=8")
+print("K=9")
