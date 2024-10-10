@@ -66,6 +66,11 @@ train_x,test_x,train_y,test_y = train_test_split(feat_df,outcome_df,test_size=0.
 #Create a multiple Reg model
 model = LinearRegression()
 model.fit(train_x,  train_y)
+print("intercept = ", model.intercept_)
+
+print("slop = ")
+print(model.feature_names_in_)
+print(model.coef_)
 
 #get the r_sq value
 r_sq = model.score(test_x, test_y)
