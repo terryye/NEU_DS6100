@@ -54,6 +54,5 @@ print(score_means)
 compare = {
     "rf3_scores_mean vs ad3_scores" : ">" if score_means["rf3"] > score_means["ad3"] else "<",
     "rf50_scores_mean vs ad50_scores": ">" if score_means["rf50"] > score_means["ad50"] else "<",
-
 }
 print(compare)
