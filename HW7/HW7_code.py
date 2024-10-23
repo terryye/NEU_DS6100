@@ -3,7 +3,7 @@ from matplotlib.pyplot import *
 from pydtmc import *
 from sklearn.naive_bayes import *
 from sklearn.model_selection import train_test_split
-
+import numpy as np
 
 #Naive Bayes
 #Input Dateset
