@@ -36,4 +36,3 @@ print(nn.summary())
 #Accuracy of Model on Test data
 loss,accuracy = nn.evaluate(x_test,y_test)
 print('accuracy=',accuracy,' , loss=',loss)
-

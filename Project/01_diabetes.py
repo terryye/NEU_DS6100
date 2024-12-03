@@ -46,9 +46,9 @@ kmeans = KMeans(n_clusters=2, random_state=0).fit(X)
 df_outcome = df_normalized.copy()
 
 df_outcome["Cluster"] = kmeans.labels_
-# 2.2 Assign ‘Diabetes’ name to the cluster with higher average Glucose and ‘No Diabetes’ to the other cluster.
 glucose_centers = kmeans.cluster_centers_[:, 0]
 
+# 2.2 Assign ‘Diabetes’ name to the cluster with higher average Glucose and ‘No Diabetes’ to the other cluster.
 cluster_names = ["Diabetes", "No Diabetes"] if glucose_centers[0] > glucose_centers[1] else ["No Diabetes", "Diabetes"]
 df_outcome["Cluster"] = df_outcome["Cluster"].replace([0, 1], cluster_names)
 
@@ -56,15 +56,21 @@ df_outcome["Cluster"] = df_outcome["Cluster"].replace([0, 1], cluster_names)
 df_outcome["Outcome"] = df_outcome["Cluster"].replace(["Diabetes", "No Diabetes"], [1, 0])
 
 # plotting the clusters in a 3D plot
-'''
-fig = plt.figure()
+'''fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
-ax.scatter(df_outcome["Glucose"], df_outcome["BMI"], df_outcome["Age"], c=df_outcome["Outcome"], cmap='viridis')
+colors = {0: 'blue', 1: 'orange'}
+point_colors = df_outcome["Outcome"].map(colors)
+sc = ax.scatter(df_outcome["Glucose"], df_outcome["BMI"], df_outcome["Age"], c=point_colors, cmap='viridis')
 ax.set_xlabel('Glucose')
 ax.set_ylabel('BMI')
 ax.set_zlabel('Age')
+# Create a legend for Outcome
+for outcome, color in colors.items():
+    ax.scatter([], [], [], c=color, label=f'Outcome {outcome}')
+ax.legend(title='Outcome')
+
 plt.show()
-'''
+exit()'''
 
 ### Step 3: Feature Extraction
 # Split data into test and training sets (consider 20% for test).
@@ -97,12 +103,13 @@ model_nb = train_nb(X_train_pca_df, y_train_pca, X_test_pca_df, y_test_pca)
 
 # Train KNN model
 from knn import train_knn
-model_knn = train_knn(X_train_pca_df, y_train_pca, X_test_pca_df, y_test_pca)
+knn_best_hp = {'n_neighbors':21,'metric':'manhattan', 'weights':'distance'}
+model_knn = train_knn(X_train_pca_df, y_train_pca, X_test_pca_df, y_test_pca,knn_best_hp)
 
 # Neural Network Model
 from nn import train_nn
-best_hp = {'hidden_layers':1,'neurons':3, 'activation':'relu','optimizer': 'adam'}
-model_nn = train_nn(X_train_pca_df, y_train_pca, X_test_pca_df, y_test_pca, best_hp)
+nn_best_hp = {'hidden_layers':1,'neurons':9, 'activation':'relu','optimizer': 'adam'}
+model_nn = train_nn(X_train_pca_df, y_train_pca, X_test_pca_df, y_test_pca, None)
 
 #all models, Ensemble
 models = { 'nb': model_nb, 'knn': model_knn, 'nn': model_nn }

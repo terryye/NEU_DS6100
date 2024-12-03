@@ -6,12 +6,12 @@ import math
 
 param_grid = {
     'n_neighbors': list(range(10, 30)),  # Values of k
-    'weights': ['uniform', 'distance'],  # Weighting scheme
+    'weights': [ 'distance'],  # Weighting scheme
     'metric': ['euclidean', 'manhattan']  # Distance metrics
 }
 
 
-def train_knn(X_train,y_train,X_test,y_test):
+def train_knn(X_train,y_train,X_test,y_test, best_hp=None):
     print('*** Training KNN')
 
     # KNN Model
@@ -37,19 +37,25 @@ def train_knn(X_train,y_train,X_test,y_test):
     knn = KNeighborsClassifier()
     # Define the grid of parameters to search
 
-    # Perform grid search
-    grid_search = GridSearchCV(estimator=knn, param_grid=param_grid, cv=5, scoring='accuracy', verbose=1)
-    grid_search.fit(X_train, y_train)
+    if best_hp:
+        print(f"Best Hyperparameters: {best_hp}")
+        best_model = KNeighborsClassifier(n_neighbors=best_hp['n_neighbors'], weights=best_hp['weights'], metric=best_hp['metric'])
+    else:
+        # Perform grid search
+        grid_search = GridSearchCV(estimator=knn, param_grid=param_grid, cv=5, scoring='accuracy', verbose=1)
+        grid_search.fit(X_train, y_train)
+        best_model = grid_search.best_estimator_
+        # Print the best parameters and best score
+        print(f"Best Parameters: {grid_search.best_params_}")
+        print(f"Best Cross-Validation Score: {grid_search.best_score_}")
 
-    best_model = grid_search.best_estimator_
-    # Print the best parameters and best score
-    print(f"Best Parameters: {grid_search.best_params_}")
-    print(f"Best Cross-Validation Score: {grid_search.best_score_}")
-
+    # Fit the best model with the whole training data
+    best_model.fit(X_train, y_train)
     # Accuracy on train data
     train_pred_label = best_model.predict(X_train)
     train_accuracy = accuracy_score(train_pred_label, y_train)
     print(f"Train Data Accuracy: {train_accuracy}")
+
 
     # Accuracy on test data
     test_pred_label = best_model.predict(X_test)

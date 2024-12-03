@@ -6,7 +6,7 @@ pd.set_option('display.max_columns', 20)
 pd.set_option('display.max_rows', 50)
 pd.set_option('display.width', 1000)
 pd.set_option('display.max_rows', 100)
-
+# IQR method to remove outliers
 def remove_outliers(dataframe, columns = "*", copy = False):
     df = dataframe.copy() if copy else dataframe
     upper = 75
@@ -34,6 +34,7 @@ def remove_outliers(dataframe, columns = "*", copy = False):
 from sklearn.experimental import enable_iterative_imputer
 from sklearn.impute import IterativeImputer
 
+#using MICE to impute missing values. but we need to impute the missing values with the value that is not out of the band
 def impute(dataframe):
     df = dataframe
     minimum_before = list(df.iloc[:, :].min(axis=0))
