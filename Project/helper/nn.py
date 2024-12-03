@@ -1,5 +1,6 @@
 from keras.models import Sequential
 from keras.layers import Dense, Input
+from keras.metrics import BinaryAccuracy
 from scikeras.wrappers import KerasClassifier
 from sklearn.model_selection import GridSearchCV
 
@@ -37,7 +38,11 @@ def train_nn(X_train,y_train,X_test,y_test,best_hp):
             model_nn.add(Dense(units=neurons, activation=activation))
 
         model_nn.add(Dense(units=1, activation='sigmoid'))  # output layer, use sigmoid for binary classification
-        model_nn.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=['accuracy'])
+
+        metric = BinaryAccuracy(
+            name="binary_accuracy", dtype=None, threshold=0.5
+        )
+        model_nn.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=[metric])
         return model_nn
 
     if best_hp :

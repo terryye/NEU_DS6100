@@ -1,3 +1,6 @@
+import sys
+sys.path.insert(1, './helper')
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -10,7 +13,7 @@ from sklearn.model_selection import GridSearchCV
 
 pd.set_option('future.no_silent_downcasting', True)
 
-df = pd.read_csv("diabetes_project.csv")
+df = pd.read_csv("./data/diabetes_project.csv")
 df.describe()
 
 ### Step 1: Data pre-processing phase
@@ -74,42 +77,11 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 
 # Use PCA on the training data to create 3 new components from existing features (all columns except outcome).
 # Transfer training and test data to the new dimensions (PCs).
-from sklearn.decomposition import PCA
+from pca import PCA_extract
+X_train_pca_df, X_test_pca_df, y_train_pca, y_test_pca = (
+    PCA_extract(X_train, X_test, y_train, y_test, n_components=3))
 
-pca = PCA(n_components=3)
-X_train_pca = pca.fit_transform(X_train)
-X_test_pca = pca.transform(X_test)
 
-X_train_pca_df = pd.DataFrame(X_train_pca, columns=['PC1', 'PC2', 'PC3'])
-X_test_pca_df = pd.DataFrame(X_test_pca, columns=['PC1', 'PC2', 'PC3'])
-
-y_train_pca = np.ravel(y_train.astype(int))
-y_test_pca = np.ravel(y_test.astype(int))
-
-y_train_pca_df = pd.DataFrame(y_train_pca, columns=["Outcome"])
-y_test_pca_df = pd.DataFrame(y_test_pca, columns=["Outcome"])
-
-#combine X_train_pca and X_test_pca(only for check)
-'''
-X_train_pca_df["Outcome"] = y_train_pca_df
-X_test_pca_df["Outcome"] = y_test_pca_df
-combined_pca_df = pd.concat([X_train_pca_df, X_test_pca_df])
-combined_pca_df.to_csv("pcv.csv",index=False)
-covariance_matrix = pca.get_covariance()
-pc_feature_relationship = pd.DataFrame(pca.components_, columns=X.columns, index=['PC1', 'PC2', 'PC3'])
-'''
-
-# Plot the proportion of explained variance by Cumulative sum of principal components
-'''x_axis = range(pca.n_components_)
-plt.plot(x_axis, np.cumsum(pca.explained_variance_ratio_), marker="o")
-plt.xlabel('Principal component')
-plt.ylabel('Cumulative sum of explained variance')
-plt.xticks(x_axis)
-plt.show()
-'''
-# Show eigenvalues.Kaiser’s rule:  principal components are retained, whose eigenvalue exceed 1.
-print("Eigenvalues:")
-print(pca.explained_variance_)
 # Step 4: Classification using a super learner (Work with the pca features ?)
 '''
 Define three classification models as base classifiers consisting of Naïve Bayes, Neural Network, and KNN.
@@ -132,7 +104,9 @@ from nn import train_nn
 best_hp = {'hidden_layers':1,'neurons':3, 'activation':'relu','optimizer': 'adam'}
 model_nn = train_nn(X_train_pca_df, y_train_pca, X_test_pca_df, y_test_pca, best_hp)
 
-from dtree import train_dtree
-model_dtree = train_dtree(X_train_pca_df, y_train_pca, X_test_pca_df, y_test_pca)
+#all models, Ensemble
+models = { 'nb': model_nb, 'knn': model_knn, 'nn': model_nn }
+from ensemble import ensemble
+ensemble(X_train_pca_df, y_train_pca, X_test_pca_df, y_test_pca, models)
 
 exit()
