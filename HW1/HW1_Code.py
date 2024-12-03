@@ -9,7 +9,6 @@ from sklearn.impute import IterativeImputer
 input_dataframe = pd.read_csv("InsuranceCharges.csv")
 #print(input_dataframe)
 
-
 ##Detect Outliers
 q3, q1 = np.nanpercentile(input_dataframe['bmi'], [75 ,25])
 fence = 1.5 * (q3 - q1)
