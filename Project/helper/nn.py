@@ -12,10 +12,10 @@ def train_nn(X_train,y_train,X_test,y_test,best_hp=None):
         'batch_size': [16,32],
         'epochs': [100],
         'model__hidden_layers': [1,2,3],
-        'model__neurons': [3,9,15,30],
-        'model__optimizer': ['adam'],
-        'model__activation': ['relu'],
-        'model__dropout_rate': [0.2]
+        'model__neurons': [9,15,30],
+        'model__optimizer': ['adam','sgd'],
+        'model__activation': ['relu','tanh'],
+#        'model__dropout_rate': [0.2]
     }
     def create_model(hidden_layers=1, neurons=5, activation='relu', optimizer='adam', dropout_rate=0.2):
         print('hidden_layers=', hidden_layers, 'neurons=', neurons, 'activation=', activation, 'optimizer=', optimizer)
@@ -56,9 +56,10 @@ def train_nn(X_train,y_train,X_test,y_test,best_hp=None):
 
         # Access the best KerasClassifier and extract the model
         best_keras_classifier = grid_search.best_estimator_
+        best_params = grid_result.best_params_
         best_model = best_keras_classifier.model_
 
-        best_model.fit(X_train, y_train, batch_size=16, epochs=100, verbose=0)
+        best_model.fit(X_train, y_train, batch_size=best_params['batch_size'], epochs=best_params['epoches'], verbose=0)
 
     # Accuracy on train data
     train_loss, train_accuracy = best_model.evaluate(X_train, y_train)
