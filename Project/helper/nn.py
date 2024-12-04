@@ -1,5 +1,5 @@
 from keras.models import Sequential
-from keras.layers import Dense, Input
+from keras.layers import Dense, Input, Dropout
 from keras.metrics import BinaryAccuracy
 from scikeras.wrappers import KerasClassifier
 from sklearn.model_selection import GridSearchCV
@@ -9,22 +9,24 @@ def train_nn(X_train,y_train,X_test,y_test,best_hp=None):
     # Define hyperparameter grid
     print('*** Training Neural Network')
     param_grid = {
-        'batch_size': [8,16,32],
+        'batch_size': [16,32],
         'epochs': [100],
         'model__hidden_layers': [1,2,3],
         'model__neurons': [3,9,15,30],
         'model__optimizer': ['adam'],
-        'model__activation': ['relu']
+        'model__activation': ['relu'],
+        'model__dropout_rate': [0.2]
     }
-    def create_model(hidden_layers=1, neurons=5, activation='relu', optimizer='adam'):
+    def create_model(hidden_layers=1, neurons=5, activation='relu', optimizer='adam', dropout_rate=0.2):
         print('hidden_layers=', hidden_layers, 'neurons=', neurons, 'activation=', activation, 'optimizer=', optimizer)
         model_nn = Sequential()
         model_nn.add(
             Input(shape=(X_train.shape[1],)))  # Input layer
-
+        model_nn.add(Dropout(dropout_rate))
         for _ in range(hidden_layers):
             # use same neurons and activation function for all hidden layers
             model_nn.add(Dense(units=neurons, activation=activation))
+            model_nn.add(Dropout(dropout_rate))
 
         model_nn.add(Dense(units=1, activation='sigmoid'))  # output layer, use sigmoid for binary classification
 
