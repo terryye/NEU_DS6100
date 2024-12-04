@@ -54,7 +54,6 @@ from pca import PCA_extract
 X_train_pca_df, X_test_pca_df, y_train_pca, y_test_pca = (
     PCA_extract(X_train, X_test, y_train, y_test, n_components=3))
 
-
 # Train Naive Bayes model
 from nb import train_nb
 model_nb = train_nb(X_train_pca_df, y_train_pca, X_test_pca_df, y_test_pca)
@@ -65,7 +64,7 @@ model_knn = train_knn(X_train_pca_df, y_train_pca, X_test_pca_df, y_test_pca)
 
 # Neural Network Model
 from nn import train_nn
-best_hp = {'hidden_layers':1,'neurons':5, 'activation':'relu','optimizer': 'adam'}
+best_hp = {'hidden_layers':1,'neurons':5, 'activation':'relu','optimizer': 'adam', 'batch_size':16, 'epochs':100}
 model_nn = train_nn(X_train_pca_df, y_train_pca, X_test_pca_df, y_test_pca,best_hp)
 
 #all models, Ensemble

@@ -5,10 +5,9 @@ from scikeras.wrappers import KerasClassifier
 from sklearn.model_selection import GridSearchCV
 
 
-def train_nn(X_train,y_train,X_test,y_test,best_hp):
+def train_nn(X_train,y_train,X_test,y_test,best_hp=None):
     # Define hyperparameter grid
     print('*** Training Neural Network')
-
     param_grid = {
         'batch_size': [8,16,32],
         'epochs': [100],
@@ -17,16 +16,6 @@ def train_nn(X_train,y_train,X_test,y_test,best_hp):
         'model__optimizer': ['adam'],
         'model__activation': ['relu']
     }
-    '''
-    param_grid = {
-        'batch_size': [8, 16],
-        'epochs': [50,100],
-        'model__hidden_layers': [1,2],
-        'model__neurons': [3,9],
-        'model__optimizer': ['adam'],
-        'model__activation': ['relu']
-    }
-    '''
     def create_model(hidden_layers=1, neurons=5, activation='relu', optimizer='adam'):
         print('hidden_layers=', hidden_layers, 'neurons=', neurons, 'activation=', activation, 'optimizer=', optimizer)
         model_nn = Sequential()
@@ -50,7 +39,7 @@ def train_nn(X_train,y_train,X_test,y_test,best_hp):
                                   best_hp['neurons'],
                                   best_hp['activation'],
                                   best_hp['optimizer'])
-        best_model.fit(X_train, y_train, batch_size=16, epochs=100, verbose=0)
+        best_model.fit(X_train, y_train, batch_size=best_hp['batch_size'], epochs=best_hp['epochs'], verbose=0)
     else :
 
         # Create a KerasClassifier

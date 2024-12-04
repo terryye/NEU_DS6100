@@ -41,6 +41,7 @@ def ensemble(X_train,y_train,X_test,y_test, models):
     best_model = grid_search.best_estimator_
 
     print('best_params =', best_params)
+    best_model.fit(X_train_dtree_df, y_train)
 
     # Accuracy on test data
     test_pred_label = best_model.predict(X_test_dtree_df)

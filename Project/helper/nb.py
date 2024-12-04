@@ -34,8 +34,16 @@ def train_nb(X_train,y_train,X_test,y_test):
     plt.show()
     '''
 
+
+    # Accuracy on train data
+    train_pred_label = nb_model.predict(X_train)
+    train_accuracy = accuracy_score(train_pred_label, y_train)
+    print(f"Train Data Accuracy: {train_accuracy}")
+
+
     # we should be careful Zero Frequency Problem when using Naive Bayes,but for our case we don't have this problem
     predict = nb_model.predict(X_test)
+
     test_accuracy = accuracy_score(predict, y_test)
     print(f"Test Data Accuracy: {test_accuracy}")
 

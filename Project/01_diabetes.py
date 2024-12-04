@@ -103,13 +103,12 @@ model_nb = train_nb(X_train_pca_df, y_train_pca, X_test_pca_df, y_test_pca)
 
 # Train KNN model
 from knn import train_knn
-knn_best_hp = {'n_neighbors':21,'metric':'manhattan', 'weights':'distance'}
-model_knn = train_knn(X_train_pca_df, y_train_pca, X_test_pca_df, y_test_pca,knn_best_hp)
+model_knn = train_knn(X_train_pca_df, y_train_pca, X_test_pca_df, y_test_pca)
 
 # Neural Network Model
 from nn import train_nn
-nn_best_hp = {'hidden_layers':1,'neurons':9, 'activation':'relu','optimizer': 'adam'}
-model_nn = train_nn(X_train_pca_df, y_train_pca, X_test_pca_df, y_test_pca, nn_best_hp)
+nn_best_hp = {'hidden_layers':2,'neurons':9, 'activation':'relu','optimizer': 'adam', 'batch_size':16,'epochs':100}
+model_nn = train_nn(X_train_pca_df, y_train_pca, X_test_pca_df, y_test_pca,nn_best_hp)
 
 #all models, Ensemble
 models = { 'nb': model_nb, 'knn': model_knn, 'nn': model_nn }

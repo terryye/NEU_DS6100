@@ -57,22 +57,4 @@ def categorize(df):
 def print_nan(df):
     rows_with_nan = df[df.isna().any(axis=1)]
     print(rows_with_nan)
-def find_best_knn(feats_df, label_df):
-    from sklearn.neighbors import KNeighborsClassifier
-    from sklearn.metrics import accuracy_score
 
-    x_train, x_test, y_train, y_test = train_test_split(feats_df, label_df, test_size=0.1, random_state=0)
-
-    # Train KNN models with k from 3 to 20 on Train Dataset dataset with ‘Outcome’ as label and all other attributes as features.
-    k_range = range(3, 20)
-    best_k = 0
-    best_accuracy = 0
-    for k in k_range:
-        knn = KNeighborsClassifier(n_neighbors=k)
-        knn.fit(x_train, np.ravel(y_train))
-        y_pred = knn.predict(x_test)
-        accuracy = accuracy_score(np.ravel(y_test), y_pred)
-        if accuracy > best_accuracy:
-            best_accuracy = accuracy
-            best_k = k
-    return best_k
