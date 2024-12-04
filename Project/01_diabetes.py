@@ -1,12 +1,9 @@
-import sys
-sys.path.insert(1, './helper')
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from mlxtend.evaluate.bootstrap_point632 import accuracy
 from networkx.algorithms.bipartite.cluster import clustering
-from utils import remove_outliers, impute
+from helper.utils import remove_outliers, impute
 import scipy.stats as stats
 from sklearn.model_selection import GridSearchCV
 
@@ -83,7 +80,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 
 # Use PCA on the training data to create 3 new components from existing features (all columns except outcome).
 # Transfer training and test data to the new dimensions (PCs).
-from pca import PCA_extract
+from helper.pca import PCA_extract
 X_train_pca_df, X_test_pca_df, y_train_pca, y_test_pca = (
     PCA_extract(X_train, X_test, y_train, y_test, n_components=3))
 
@@ -98,21 +95,21 @@ Report accuracy of the model on the test data.
 
 '''
 # Train Naive Bayes model
-from nb import train_nb
+from helper.nb import train_nb
 model_nb = train_nb(X_train_pca_df, y_train_pca, X_test_pca_df, y_test_pca)
 
 # Train KNN model
-from knn import train_knn
+from helper.knn import train_knn
 model_knn = train_knn(X_train_pca_df, y_train_pca, X_test_pca_df, y_test_pca)
 
 # Neural Network Model
-from nn import train_nn
+from helper.nn import train_nn
 nn_best_hp = {'hidden_layers':2,'neurons':9, 'activation':'relu','optimizer': 'adam', 'batch_size':16,'epochs':100}
 model_nn = train_nn(X_train_pca_df, y_train_pca, X_test_pca_df, y_test_pca,nn_best_hp)
 
 #all models, Ensemble
 models = { 'nb': model_nb, 'knn': model_knn, 'nn': model_nn }
-from ensemble import ensemble
+from helper.ensemble import ensemble
 ensemble(X_train_pca_df, y_train_pca, X_test_pca_df, y_test_pca, models)
 
 exit()
