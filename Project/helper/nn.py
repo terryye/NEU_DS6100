@@ -22,11 +22,11 @@ def train_nn(X_train,y_train,X_test,y_test,best_hp=None):
         model_nn = Sequential()
         model_nn.add(
             Input(shape=(X_train.shape[1],)))  # Input layer
-        model_nn.add(Dropout(dropout_rate))
+        #model_nn.add(Dropout(dropout_rate))
         for _ in range(hidden_layers):
             # use same neurons and activation function for all hidden layers
             model_nn.add(Dense(units=neurons, activation=activation))
-            model_nn.add(Dropout(dropout_rate))
+            #model_nn.add(Dropout(dropout_rate))
 
         model_nn.add(Dense(units=1, activation='sigmoid'))  # output layer, use sigmoid for binary classification
 
