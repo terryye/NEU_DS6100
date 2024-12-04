@@ -59,7 +59,8 @@ def train_nn(X_train,y_train,X_test,y_test,best_hp=None):
         best_params = grid_result.best_params_
         best_model = best_keras_classifier.model_
 
-        best_model.fit(X_train, y_train, batch_size=best_params['batch_size'], epochs=best_params['epoches'], verbose=0)
+
+        best_model.fit(X_train, y_train, batch_size=best_params['batch_size'], epochs=best_params['epochs'], verbose=0)
 
     # Accuracy on train data
     train_loss, train_accuracy = best_model.evaluate(X_train, y_train)
