@@ -13,23 +13,26 @@ n_neighbors_max = 25
 def train_knn(X_train,y_train,X_test,y_test, best_k=None):
     print('*** Training KNN')
     feat_train, feat_validate, label_train, label_validate = train_test_split(X_train, y_train, test_size=0.1, random_state=0)
-
-    # Train KNN models with k from 3 to 20 on Train Dataset dataset with ‘Outcome’ as label and all other attributes as features.
-    k_values = range(1, n_neighbors_max,2)
-    best_k = 0
-    best_accuracy = 0
-    best_model = None
-    accuracies = []
-    for k in k_values:
-        knn = KNeighborsClassifier(n_neighbors=k)
-        knn.fit(feat_train, np.ravel(label_train))
-        label_pred = knn.predict(feat_validate)
-        accuracy = accuracy_score(np.ravel(label_validate), label_pred)
-        accuracies.append(accuracy)
-        if accuracy > best_accuracy:
-            best_accuracy = accuracy
-            best_k = k
-            best_model = knn
+    if best_k:
+        best_model = KNeighborsClassifier(n_neighbors=best_k)
+        best_model.fit(feat_train, np.ravel(label_train))
+    else:
+        # Train KNN models with k from 3 to 20 on Train Dataset dataset with ‘Outcome’ as label and all other attributes as features.
+        k_values = range(1, n_neighbors_max,2)
+        best_k = 0
+        best_accuracy = 0
+        best_model = None
+        accuracies = []
+        for k in k_values:
+            knn = KNeighborsClassifier(n_neighbors=k)
+            knn.fit(feat_train, np.ravel(label_train))
+            label_pred = knn.predict(feat_validate)
+            accuracy = accuracy_score(np.ravel(label_validate), label_pred)
+            accuracies.append(accuracy)
+            if accuracy > best_accuracy:
+                best_accuracy = accuracy
+                best_k = k
+                best_model = knn
     '''    
     # Plot the results
     plt.plot(k_values, accuracies, marker='o')

@@ -58,6 +58,10 @@ def train_nn(X_train,y_train,X_test,y_test,best_hp=None):
 
         best_model.fit(X_train, y_train, batch_size=16, epochs=100, verbose=0)
 
+    # Accuracy on train data
+    train_loss, train_accuracy = best_model.evaluate(X_train, y_train)
+    print(f"Train Data Accuracy: {train_accuracy}")
+
     loss, accuracy = best_model.evaluate(X_test, y_test)
     print('test data accuracy=', accuracy, ' , loss=', loss)
     return best_model

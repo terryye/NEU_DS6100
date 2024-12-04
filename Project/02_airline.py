@@ -64,7 +64,7 @@ model_knn = train_knn(X_train_pca_df, y_train_pca, X_test_pca_df, y_test_pca)
 
 # Neural Network Model
 from nn import train_nn
-best_hp = {'hidden_layers':1,'neurons':5, 'activation':'relu','optimizer': 'adam', 'batch_size':16, 'epochs':100}
+best_hp = {'hidden_layers':1,'neurons':15, 'activation':'relu','optimizer': 'adam', 'batch_size':16, 'epochs':100}
 model_nn = train_nn(X_train_pca_df, y_train_pca, X_test_pca_df, y_test_pca,best_hp)
 
 #all models, Ensemble
